@@ -59,14 +59,26 @@ class ProxyCommand(ClosingContextManager):
         """
         if subprocess is None:
             raise subprocess_import_error
-        self.cmd = shlex.split(command_line)
-        self.process = subprocess.Popen(
-            self.cmd,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            bufsize=0,
-        )
+        if sys.platform == 'win32':
+            self.cmd = os.path.basename(command_line)
+            self.cwd = os.path.dirname(os.path.abspath(command_line))
+            self.process = subprocess.Popen(
+                self.cmd,
+                cwd=self.cwd,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                bufsize=0,
+            )
+        else:
+            self.cmd = shlex.split(command_line)
+            self.process = subprocess.Popen(
+                self.cmd,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                bufsize=0,
+            )
         self.timeout = None
 
     def send(self, content):
