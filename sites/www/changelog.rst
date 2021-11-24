@@ -2,6 +2,28 @@
 Changelog
 =========
 
+- :bug:`1462` (via :issue:`1882`) Newer server-side key exchange algorithms not
+  intended to use SHA1 (``diffie-hellman-group14-sha256``,
+  ``diffie-hellman-group16-sha512``) were incorrectly using SHA1 after all, due
+  to a bug causing them to ignore the ``hash_algo`` class attribute. This has
+  been corrected. Big thanks to ``@miverson`` for the report and to Benno Rice
+  for the patch.
+- :release:`2.7.2 <2020-08-30>`
+- :support:`- backported` Update our CI to catch issues with sdist generation,
+  installation and testing.
+- :support:`1727 backported` Add missing test suite fixtures directory to
+  MANIFEST.in, reinstating the ability to run Paramiko's tests from an sdist
+  tarball. Thanks to Sandro Tosi for reporting the issue and to Blazej Michalik
+  for the PR.
+- :support:`1722 backported` Remove leading whitespace from OpenSSH RSA test
+  suite static key fixture, to conform better to spec. Credit: Alex Gaynor.
+- :bug:`-` Fix incorrect string formatting causing unhelpful error message
+  annotation when using Kerberos/GSSAPI. (Thanks, newer version of flake8!)
+- :bug:`1723` Fix incorrectly swapped order of ``p`` and ``q`` numbers when
+  loading OpenSSH-format RSA private keys. At minimum this should address a
+  slowdown when using such keys, and it also means Paramiko works with
+  Cryptography 3.1 and above (which complains strenuously when this problem
+  appears). Thanks to Alex Gaynor for the patch.
 - :release:`2.7.1 <2019-12-09>`
 - :bug:`1567` The new-style private key format (added in 2.7) suffered from an
   unpadding bug which had been fixed earlier for Ed25519 (as that key type has
